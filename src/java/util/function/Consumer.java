@@ -42,7 +42,7 @@ import java.util.Objects;
 public interface Consumer<T> {
 
     /**
-     * Performs this operation on the given argument.
+     * 传入参数没有返回值
      *
      * @param t the input argument
      */

@@ -41,10 +41,10 @@ import java.util.Objects;
 public interface Function<T, R> {
 
     /**
-     * Applies this function to the given argument.
+     * 参数转换接口
      *
-     * @param t the function argument
-     * @return the function result
+     * @param t 传入类型
+     * @return R 返回类型
      */
     R apply(T t);
 

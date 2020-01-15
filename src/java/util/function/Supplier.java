@@ -41,7 +41,7 @@ package java.util.function;
 public interface Supplier<T> {
 
     /**
-     * Gets a result.
+     * 提供者接口
      *
      * @return a result
      */

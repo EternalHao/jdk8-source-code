@@ -181,10 +181,22 @@ public abstract class Buffer {
     static final int SPLITERATOR_CHARACTERISTICS =
         Spliterator.SIZED | Spliterator.SUBSIZED | Spliterator.ORDERED;
 
-    // Invariants: mark <= position <= limit <= capacity
+    // 0<= mark <= position <= limit <= capacity
+    /**
+     * mark() 和 reset()
+     */
     private int mark = -1;
+    /**
+     * 缓存区中正在操作数据的位置
+     */
     private int position = 0;
+    /**
+     * 缓存区总可以操作数据的大小 （limit后的数据不能读写）
+     */
     private int limit;
+    /**
+     * 缓存区中最大存储数据的容量，一旦声明不能改变
+     */
     private int capacity;
 
     // Used only by direct buffers

@@ -87,7 +87,7 @@ import sun.misc.SharedSecrets;
  * @since   1.2
  */
 
-public class HashSet<E>
+public class  HashSet<E>
     extends AbstractSet<E>
     implements Set<E>, Cloneable, java.io.Serializable
 {
@@ -95,7 +95,7 @@ public class HashSet<E>
 
     private transient HashMap<E,Object> map;
 
-    // Dummy value to associate with an Object in the backing Map
+    // 默认 PRESENT
     private static final Object PRESENT = new Object();
 
     /**

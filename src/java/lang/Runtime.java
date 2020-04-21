@@ -41,6 +41,10 @@ import sun.reflect.Reflection;
  * @author  unascribed
  * @see     java.lang.Runtime#getRuntime()
  * @since   JDK1.0
+ *
+ * 每个JVM只有一个Runtime实例，即为运行时环境
+ *
+ * 单例模式
  */
 
 public class Runtime {

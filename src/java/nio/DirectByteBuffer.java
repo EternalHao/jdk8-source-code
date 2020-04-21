@@ -68,7 +68,7 @@ class DirectByteBuffer
     }
 
 
-
+    // 回调 任务对象
     private static class Deallocator
         implements Runnable
     {
@@ -91,6 +91,7 @@ class DirectByteBuffer
                 // Paranoia
                 return;
             }
+            // 释放物理内存
             unsafe.freeMemory(address);
             address = 0;
             Bits.unreserveMemory(size, capacity);
@@ -117,6 +118,7 @@ class DirectByteBuffer
     DirectByteBuffer(int cap) {                   // package-private
 
         super(-1, 0, cap, cap);
+        // 系统内存页
         boolean pa = VM.isDirectMemoryPageAligned();
         int ps = Bits.pageSize();
         long size = Math.max(1L, (long)cap + (pa ? ps : 0));
@@ -124,6 +126,7 @@ class DirectByteBuffer
 
         long base = 0;
         try {
+            // 通过 unsafe 来操作系统内存
             base = unsafe.allocateMemory(size);
         } catch (OutOfMemoryError x) {
             Bits.unreserveMemory(size, cap);
@@ -136,6 +139,7 @@ class DirectByteBuffer
         } else {
             address = base;
         }
+        // 虚引用对象 当ByteBuffer 被垃圾回收掉的时候，会执行 Cleaner中的 clean方法
         cleaner = Cleaner.create(this, new Deallocator(base, size, cap));
         att = null;
 

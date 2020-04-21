@@ -310,6 +310,7 @@ import sun.util.spi.CalendarProvider;
  * @author Mark Davis, David Goldsmith, Chen-Lieh Huang, Alan Liu
  * @since JDK1.1
  */
+// 简单工厂模式的应用
 public abstract class Calendar implements Serializable, Cloneable, Comparable<Calendar> {
 
     // Data flow in Calendar

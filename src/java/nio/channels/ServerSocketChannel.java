@@ -69,6 +69,7 @@ import java.nio.channels.spi.SelectorProvider;
  * @author Mark Reinhold
  * @author JSR-51 Expert Group
  * @since 1.4
+ * TCP 数据的读写
  */
 
 public abstract class ServerSocketChannel

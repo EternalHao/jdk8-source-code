@@ -3797,6 +3797,7 @@ public class Arrays {
     @SafeVarargs
     @SuppressWarnings("varargs")
     public static <T> List<T> asList(T... a) {
+        // 根据作用域就近原则，此处生效的是内部类ArrayList
         return new ArrayList<>(a);
     }
 
@@ -3807,6 +3808,7 @@ public class Arrays {
         implements RandomAccess, java.io.Serializable
     {
         private static final long serialVersionUID = -2764017481108945198L;
+        // final 修饰不准修改其引用
         private final E[] a;
 
         ArrayList(E[] array) {
@@ -3828,8 +3830,10 @@ public class Arrays {
         public <T> T[] toArray(T[] a) {
             int size = size();
             if (a.length < size)
+                // 返回一个空的数组
                 return Arrays.copyOf(this.a, size,
                                      (Class<? extends T[]>) a.getClass());
+            // 容量足够，则直接复制
             System.arraycopy(this.a, 0, a, 0, size);
             if (a.length > size)
                 a[size] = null;

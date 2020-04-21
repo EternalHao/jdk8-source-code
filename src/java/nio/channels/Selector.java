@@ -325,6 +325,7 @@ public abstract class Selector implements Closeable {
      *
      * @throws  IllegalArgumentException
      *          If the value of the timeout argument is negative
+     * 阻塞的方法
      */
     public abstract int select(long timeout)
         throws IOException;

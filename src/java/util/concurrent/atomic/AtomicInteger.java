@@ -65,6 +65,9 @@ public class AtomicInteger extends Number implements java.io.Serializable {
         } catch (Exception ex) { throw new Error(ex); }
     }
 
+    /**
+     * 保证内存可见性
+     */
     private volatile int value;
 
     /**
@@ -183,6 +186,7 @@ public class AtomicInteger extends Number implements java.io.Serializable {
      * @return the updated value
      */
     public final int incrementAndGet() {
+        // valueOffset = 12
         return unsafe.getAndAddInt(this, valueOffset, 1) + 1;
     }
 

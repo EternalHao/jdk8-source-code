@@ -106,6 +106,7 @@ import java.util.Collection;
 public class ReentrantLock implements Lock, java.io.Serializable {
     private static final long serialVersionUID = 7373984872572414699L;
     /** Synchronizer providing all implementation mechanics */
+    // 底层模型
     private final Sync sync;
 
     /**
@@ -131,10 +132,12 @@ public class ReentrantLock implements Lock, java.io.Serializable {
             int c = getState();
             if (c == 0) {
                 if (compareAndSetState(0, acquires)) {
+                    // 当前线程拿到了锁
                     setExclusiveOwnerThread(current);
                     return true;
                 }
             }
+            // 重入的情况
             else if (current == getExclusiveOwnerThread()) {
                 int nextc = c + acquires;
                 if (nextc < 0) // overflow
@@ -147,6 +150,7 @@ public class ReentrantLock implements Lock, java.io.Serializable {
 
         protected final boolean tryRelease(int releases) {
             int c = getState() - releases;
+            // 防止其他线程释放自己的锁
             if (Thread.currentThread() != getExclusiveOwnerThread())
                 throw new IllegalMonitorStateException();
             boolean free = false;

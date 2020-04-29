@@ -378,19 +378,44 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      * that workerCount is 0 (which sometimes entails a recheck -- see
      * below).
      */
+
     private final AtomicInteger ctl = new AtomicInteger(ctlOf(RUNNING, 0));
+    // Integer共有32位，最右边29位表示工作线程数、最左边3位表示线程池状态
+    //注：简单地说，3个二进制位可以表示从0至7的8个不同的数值(第1处)
     private static final int COUNT_BITS = Integer.SIZE - 3;
+
+    // 000-11111111111111111111111111111,类似于子网掩码，用于位的与运算，
+    //得到左边3位，还是右边29位
     private static final int CAPACITY   = (1 << COUNT_BITS) - 1;
 
     // runState is stored in the high-order bits
+    // 用左边3位，实现5种线程池状态(在左3位之后加入中画线有助于理解)
+    // 111-00000000000000000000000000000,十进制值：-536, 870, 912,
+    // 此状态表示线程池能接受新任务
     private static final int RUNNING    = -1 << COUNT_BITS;
+
+    // 000-00000000000000000000000000000,十进制值：0,
+    // 此状态不再接受新任务，但可以继续执行队列中的任务
     private static final int SHUTDOWN   =  0 << COUNT_BITS;
+
+    // 001-00000000000000000000000000000,十进制值:536z 870, 912,
+    // 此状态全面拒绝，并中断正在处理的任务
     private static final int STOP       =  1 << COUNT_BITS;
+
+    // 010-00000000000000000000000000000,十进制值：1,073,741,824,
+    // 此状态表示所有任务已经被终止
     private static final int TIDYING    =  2 << COUNT_BITS;
+
+    // 011-00000000000000000000000000000,十进制值：1,610,612,736
+    // 此状态表示已清理完现场
     private static final int TERMINATED =  3 << COUNT_BITS;
 
     // Packing and unpacking ctl
+    // 与运算，比如 001-00000000000000000000000100011,表示 67 个工作线程，
+    // 掩码取反：	111-00000000000000000000000000000,即得到左边 3 位 001,
+    // 表示线程池当前处于STOP状态
     private static int runStateOf(int c)     { return c & ~CAPACITY; }
+    // 同理掩码 000-11111111111111111111111111111,得到右边29位，即工作线程数
     private static int workerCountOf(int c)  { return c & CAPACITY; }
     private static int ctlOf(int rs, int wc) { return rs | wc; }
 
@@ -898,6 +923,18 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      * state).
      * @return true if successful
      */
+
+    /**
+     * 根据当前线程池状态，检查是否可以添加新的任务线程，如果可以则创建并启动任务
+     * 如果一切正常则返回true返回false的可能性如下：
+     *  1.线程池没有处于RUNNING状态
+     *  2.线程工厂创建新的任务线程失败
+     *  firstTask：外部启动线程池时需要构造的第一个线程，它是线程的母体
+     *  core：新增工作线程时的判断指标，解释如下
+     *      true表示新增工作线程时，需要判断当前RUNNING状态的技程是否少于corepool Size
+     *      false表示新增工作线程时，需要判断当前RUNNING状态的线程是否少于maximumPoolSize
+     */
+
     private boolean addWorker(Runnable firstTask, boolean core) {
         retry:
         for (;;) {
@@ -1362,20 +1399,28 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
          * thread.  If it fails, we know we are shut down or saturated
          * and so reject the task.
          */
+        // 返回包含线程数及线程池的状态的Interger数值
         int c = ctl.get();
+        // 如果工作线程数小于核心线程数，则创建线程任务并执行
         if (workerCountOf(c) < corePoolSize) {
             if (addWorker(command, true))
                 return;
+            // 如果创建失败，防止外部已经在线程池中的加入新任务，重新获取一下
             c = ctl.get();
         }
+        // 线程池处于RUNNING状态，才执行后半句，放入队列
         if (isRunning(c) && workQueue.offer(command)) {
             int recheck = ctl.get();
+            // 如果线程池不是 RUNNING 状态，则将刚加入队列的任务移除
             if (! isRunning(recheck) && remove(command))
-                reject(command);
+            reject(command);
+            // 如果之前线程数已被消费完，新建一个线程
             else if (workerCountOf(recheck) == 0)
                 addWorker(null, false);
         }
+        // 核心池和队列都满了，尝试创建一个新线程
         else if (!addWorker(command, false))
+            // 添加失败，唤醒拒绝策略
             reject(command);
     }
 

@@ -226,6 +226,7 @@ public class ReentrantReadWriteLock
      * Creates a new {@code ReentrantReadWriteLock} with
      * default (nonfair) ordering properties.
      */
+    // 默认使用非公平锁
     public ReentrantReadWriteLock() {
         this(false);
     }
@@ -260,22 +261,35 @@ public class ReentrantReadWriteLock
          */
 
         static final int SHARED_SHIFT   = 16;
+
+        // 左移16位后，二进制值是10000000000000000，十进制值是65536
         static final int SHARED_UNIT    = (1 << SHARED_SHIFT);
+
+        // 左移16位后再减一，十进制值是65535
+        // 这个常量值用于标识最多支持65535个递归写入锁或65535个读取锁
         static final int MAX_COUNT      = (1 << SHARED_SHIFT) - 1;
+
+        // 左移16位后再减一，二进制值是1111111111111111
         static final int EXCLUSIVE_MASK = (1 << SHARED_SHIFT) - 1;
 
         /** Returns the number of shared holds represented in count  */
+        // 用于计算持有读取锁的线程数
         static int sharedCount(int c)    { return c >>> SHARED_SHIFT; }
+
         /** Returns the number of exclusive holds represented in count  */
+        // 用于计算写入锁的重入次数
         static int exclusiveCount(int c) { return c & EXCLUSIVE_MASK; }
 
         /**
          * A counter for per-thread read hold counts.
          * Maintained as a ThreadLocal; cached in cachedHoldCounter
          */
+        // 用于每个线程持有读取锁的计数
         static final class HoldCounter {
             int count = 0;
             // Use id, not reference, to avoid garbage retention
+            // 当前持有读取锁的线程ID
+            // 这里使用线程ID而没有使用引用，避免垃圾收集器保留，导致无法回收
             final long tid = getThreadId(Thread.currentThread());
         }
 

@@ -47,6 +47,7 @@ package java.util.concurrent.locks;
  * @since 1.6
  * @author Doug Lea
  */
+// 抽象了线程持有操作
 public abstract class AbstractOwnableSynchronizer
     implements java.io.Serializable {
 

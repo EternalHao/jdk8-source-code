@@ -45,19 +45,19 @@ import sun.security.util.SecurityConstants;
 /**
  * A <i>thread</i> is a thread of execution in a program. The Java
  * Virtual Machine allows an application to have multiple threads of
- * execution running concurrently.
+ * execution running concurrently（同时）.
  * <p>
  * Every thread has a priority. Threads with higher priority are
  * executed in preference to threads with lower priority. Each thread
- * may or may not also be marked as a daemon. When code running in
+ * may or may not also be marked as a daemon（守护进程）. When code running in
  * some thread creates a new <code>Thread</code> object, the new
  * thread has its priority initially set equal to the priority of the
  * creating thread, and is a daemon thread if and only if the
  * creating thread is a daemon.
  * <p>
  * When a Java Virtual Machine starts up, there is usually a single
- * non-daemon thread (which typically calls the method named
- * <code>main</code> of some designated class). The Java Virtual
+ * non-daemon thread (which typically（通常） calls the method named
+ * <code>main</code> of some designated（指定） class). The Java Virtual
  * Machine continues to execute threads until either of the following
  * occurs:
  * <ul>
@@ -66,7 +66,7 @@ import sun.security.util.SecurityConstants;
  *     to take place.
  * <li>All threads that are not daemon threads have died, either by
  *     returning from the call to the <code>run</code> method or by
- *     throwing an exception that propagates beyond the <code>run</code>
+ *     throwing an exception that propagates（传播） beyond the <code>run</code>
  *     method.
  * </ul>
  * <p>
@@ -74,7 +74,7 @@ import sun.security.util.SecurityConstants;
  * declare a class to be a subclass of <code>Thread</code>. This
  * subclass should override the <code>run</code> method of class
  * <code>Thread</code>. An instance of the subclass can then be
- * allocated and started. For example, a thread that computes primes
+ * allocated and started. For example, a thread that computes（计算） primes
  * larger than a stated value could be written as follows:
  * <hr><blockquote><pre>
  *     class PrimeThread extends Thread {
@@ -122,7 +122,7 @@ import sun.security.util.SecurityConstants;
  *     new Thread(p).start();
  * </pre></blockquote>
  * <p>
- * Every thread has a name for identification purposes. More than
+ * Every thread has a name for identification（识别） purposes. More than
  * one thread may have the same name. If a name is not specified when
  * a thread is created, a new name is generated for it.
  * <p>
@@ -219,7 +219,7 @@ class Thread implements Runnable {
     }
 
     /**
-     * The argument supplied to the current call to
+     * The argument supplied（提供） to the current call to
      * java.util.concurrent.locks.LockSupport.park.
      * Set by (private) java.util.concurrent.locks.LockSupport.setBlocker
      * Accessed using java.util.concurrent.locks.LockSupport.getBlocker
@@ -264,16 +264,16 @@ class Thread implements Runnable {
     public static native Thread currentThread();
 
     /**
-     * A hint to the scheduler that the current thread is willing to yield
+     * A hint（提示） to the scheduler that the current thread is willing to yield（暂停）
      * its current use of a processor. The scheduler is free to ignore this
      * hint.
      *
      * <p> Yield is a heuristic attempt to improve relative progression
      * between threads that would otherwise over-utilise a CPU. Its use
-     * should be combined with detailed profiling and benchmarking to
+     * should be combined（结合） with detailed profiling and benchmarking to
      * ensure that it actually has the desired effect.
      *
-     * <p> It is rarely appropriate to use this method. It may be useful
+     * <p> It is rarely（很少） appropriate to use this method. It may be useful
      * for debugging or testing purposes, where it may help to reproduce
      * bugs due to race conditions. It may also be useful when designing
      * concurrency control constructs such as the ones in the
@@ -284,7 +284,7 @@ class Thread implements Runnable {
     /**
      * Causes the currently executing thread to sleep (temporarily cease
      * execution) for the specified number of milliseconds, subject to
-     * the precision and accuracy of system timers and schedulers. The thread
+     * the precision（精度） and accuracy of system timers and schedulers. The thread
      * does not lose ownership of any monitors.
      *
      * @param  millis

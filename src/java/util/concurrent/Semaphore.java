@@ -38,10 +38,10 @@ import java.util.Collection;
 import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 
 /**
- * A counting semaphore.  Conceptually, a semaphore maintains a set of
+ * A counting semaphore.  Conceptually, a semaphore maintains（维护） a set of
  * permits.  Each {@link #acquire} blocks if necessary until a permit is
  * available, and then takes it.  Each {@link #release} adds a permit,
- * potentially releasing a blocking acquirer.
+ * potentially（潜在的） releasing a blocking acquirer.
  * However, no actual permit objects are used; the {@code Semaphore} just
  * keeps a count of the number available and acts accordingly.
  *

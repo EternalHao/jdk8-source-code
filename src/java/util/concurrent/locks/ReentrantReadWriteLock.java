@@ -39,28 +39,28 @@ import java.util.Collection;
 
 /**
  * An implementation of {@link ReadWriteLock} supporting similar
- * semantics to {@link ReentrantLock}.
+ * semantics（语义） to {@link ReentrantLock}.
  * <p>This class has the following properties:
  *
  * <ul>
- * <li><b>Acquisition order</b>
+ * <li><b>Acquisition（习惯） order</b>
  *
- * <p>This class does not impose a reader or writer preference
+ * <p>This class does not impose（实施） a reader or writer preference
  * ordering for lock access.  However, it does support an optional
  * <em>fairness</em> policy.
  *
  * <dl>
  * <dt><b><i>Non-fair mode (default)</i></b>
  * <dd>When constructed as non-fair (the default), the order of entry
- * to the read and write lock is unspecified, subject to reentrancy
- * constraints.  A nonfair lock that is continuously contended may
+ * to the read and write lock is unspecified（未指定的）, subject to reentrancy
+ * constraints.  A nonfair lock that is continuously（不断） contended may
  * indefinitely postpone one or more reader or writer threads, but
- * will normally have higher throughput than a fair lock.
+ * will normally have higher throughput（吞吐量） than a fair lock.
  *
  * <dt><b><i>Fair mode</i></b>
- * <dd>When constructed as fair, threads contend for entry using an
- * approximately arrival-order policy. When the currently held lock
- * is released, either the longest-waiting single writer thread will
+ * <dd>When constructed as fair, threads contend（认为） for entry using an
+ * approximately（约束） arrival-order policy. When the currently held lock
+ * is released, either the longest-waiting（等待时间最长的） single writer thread will
  * be assigned the write lock, or if there is a group of reader threads
  * waiting longer than all waiting writer threads, that group will be
  * assigned the read lock.
@@ -69,14 +69,14 @@ import java.util.Collection;
  * will block if either the write lock is held, or there is a waiting
  * writer thread. The thread will not acquire the read lock until
  * after the oldest currently waiting writer thread has acquired and
- * released the write lock. Of course, if a waiting writer abandons
+ * released the write lock. Of course, if a waiting writer abandons（放弃）
  * its wait, leaving one or more reader threads as the longest waiters
  * in the queue with the write lock free, then those readers will be
  * assigned the read lock.
  *
  * <p>A thread that tries to acquire a fair write lock (non-reentrantly)
  * will block unless both the read lock and write lock are free (which
- * implies there are no waiting threads).  (Note that the non-blocking
+ * implies（意味着） there are no waiting threads).  (Note that the non-blocking
  * {@link ReadLock#tryLock()} and {@link WriteLock#tryLock()} methods
  * do not honor this fair setting and will immediately acquire the lock
  * if it is possible, regardless of waiting threads.)
@@ -90,13 +90,13 @@ import java.util.Collection;
  * readers are not allowed until all write locks held by the writing
  * thread have been released.
  *
- * <p>Additionally, a writer can acquire the read lock, but not
- * vice-versa.  Among other applications, reentrancy can be useful
+ * <p>Additionally（另外）, a writer can acquire the read lock, but not
+ * vice-versa（反之亦然）.  Among other applications, reentrancy can be useful
  * when write locks are held during calls or callbacks to methods that
  * perform reads under read locks.  If a reader tries to acquire the
  * write lock it will never succeed.
  *
- * <li><b>Lock downgrading</b>
+ * <li><b>Lock downgrading（降级）</b>
  * <p>Reentrancy also allows downgrading from the write lock to a read lock,
  * by acquiring the write lock, then the read lock and then releasing the
  * write lock. However, upgrading from a read lock to the write lock is
@@ -117,17 +117,17 @@ import java.util.Collection;
  * {@code readLock().newCondition()} throws
  * {@code UnsupportedOperationException}.
  *
- * <li><b>Instrumentation</b>
+ * <li><b>Instrumentation（仪表）</b>
  * <p>This class supports methods to determine whether locks
- * are held or contended. These methods are designed for monitoring
+ * are held or contended（争斗）. These methods are designed for monitoring
  * system state, not for synchronization control.
  * </ul>
  *
  * <p>Serialization of this class behaves in the same way as built-in
- * locks: a deserialized lock is in the unlocked state, regardless of
+ * locks: a deserialized lock is in the unlocked state, regardless（不管） of
  * its state when serialized.
  *
- * <p><b>Sample usages</b>. Here is a code sketch showing how to perform
+ * <p><b>Sample usages</b>. Here is a code sketch（草图） showing how to perform
  * lock downgrading after updating a cache (exception handling is
  * particularly tricky when handling multiple locks in a non-nested
  * fashion):
@@ -140,7 +140,7 @@ import java.util.Collection;
  *
  *   void processCachedData() {
  *     rwl.readLock().lock();
- *     if (!cacheValid) {
+ *     if (!cacheValid) { // cache not exist
  *       // Must release read lock before acquiring write lock
  *       rwl.readLock().unlock();
  *       rwl.writeLock().lock();
@@ -167,9 +167,9 @@ import java.util.Collection;
  * }}</pre>
  *
  * ReentrantReadWriteLocks can be used to improve concurrency in some
- * uses of some kinds of Collections. This is typically worthwhile
+ * uses of some kinds of Collections. This is typically worthwhile（有价值的）
  * only when the collections are expected to be large, accessed by
- * more reader threads than writer threads, and entail operations with
+ * more reader threads than writer threads, and entail（需要） operations with
  * overhead that outweighs synchronization overhead. For example, here
  * is a class using a TreeMap that is expected to be large and
  * concurrently accessed.
@@ -205,7 +205,7 @@ import java.util.Collection;
  *
  * <h3>Implementation Notes</h3>
  *
- * <p>This lock supports a maximum of 65535 recursive write locks
+ * <p>This lock supports a maximum of 65535 recursive（递归） write locks
  * and 65535 read locks. Attempts to exceed these limits result in
  * {@link Error} throws from locking methods.
  *
@@ -226,7 +226,6 @@ public class ReentrantReadWriteLock
      * Creates a new {@code ReentrantReadWriteLock} with
      * default (nonfair) ordering properties.
      */
-    // 默认使用非公平锁
     public ReentrantReadWriteLock() {
         this(false);
     }
@@ -254,9 +253,9 @@ public class ReentrantReadWriteLock
         private static final long serialVersionUID = 6317671515068378041L;
 
         /*
-         * Read vs write count extraction constants and functions.
-         * Lock state is logically divided into two unsigned shorts:
-         * The lower one representing the exclusive (writer) lock hold count,
+         * Read vs write count extraction（提取） constants and functions.
+         * Lock state is logically（逻辑上） divided（划分） into two unsigned shorts:
+         * The lower one representing（代表） the exclusive (writer) lock hold count,
          * and the upper the shared (reader) hold count.
          */
 
@@ -316,14 +315,14 @@ public class ReentrantReadWriteLock
          * readLock. This saves ThreadLocal lookup in the common case
          * where the next thread to release is the last one to
          * acquire. This is non-volatile since it is just used
-         * as a heuristic, and would be great for threads to cache.
+         * as a heuristic（推理）, and would be great for threads to cache.
          *
          * <p>Can outlive the Thread for which it is caching the read
-         * hold count, but avoids garbage retention by not retaining a
+         * hold count, but avoids（避免） garbage retention by not retaining a
          * reference to the Thread.
          *
-         * <p>Accessed via a benign data race; relies on the memory
-         * model's final field and out-of-thin-air guarantees.
+         * <p>Accessed via（通过） a benign（良性的） data race; relies on the memory
+         * model's final field and out-of-thin-air（无中生有） guarantees（担保）.
          */
         private transient HoldCounter cachedHoldCounter;
 
@@ -331,12 +330,12 @@ public class ReentrantReadWriteLock
          * firstReader is the first thread to have acquired the read lock.
          * firstReaderHoldCount is firstReader's hold count.
          *
-         * <p>More precisely, firstReader is the unique thread that last
+         * <p>More precisely（精确）, firstReader is the unique thread that last（上一次）
          * changed the shared count from 0 to 1, and has not released the
          * read lock since then; null if there is no such thread.
          *
-         * <p>Cannot cause garbage retention unless the thread terminated
-         * without relinquishing its read locks, since tryReleaseShared
+         * <p>Cannot cause garbage retention（保留） unless the thread terminated
+         * without relinquishing（放弃） its read locks, since tryReleaseShared
          * sets it to null.
          *
          * <p>Accessed via a benign data race; relies on the memory
@@ -355,14 +354,14 @@ public class ReentrantReadWriteLock
 
         /*
          * Acquires and releases use the same code for fair and
-         * nonfair locks, but differ in whether/how they allow barging
+         * nonfair locks, but differ in whether/how they allow barging（冲突）
          * when queues are non-empty.
          */
 
         /**
          * Returns true if the current thread, when trying to acquire
-         * the read lock, and otherwise eligible to do so, should block
-         * because of policy for overtaking other waiting threads.
+         * the read lock, and otherwise eligible（合适） to do so, should block
+         * because of policy for overtaking（追赶） other waiting threads.
          */
         abstract boolean readerShouldBlock();
 
@@ -381,11 +380,13 @@ public class ReentrantReadWriteLock
          */
 
         protected final boolean tryRelease(int releases) {
+            // 判断当前线程是否拥有该锁
             if (!isHeldExclusively())
                 throw new IllegalMonitorStateException();
             int nextc = getState() - releases;
             boolean free = exclusiveCount(nextc) == 0;
             if (free)
+                // 当前线程取消锁持有
                 setExclusiveOwnerThread(null);
             setState(nextc);
             return free;
@@ -393,18 +394,19 @@ public class ReentrantReadWriteLock
 
         protected final boolean tryAcquire(int acquires) {
             /*
-             * Walkthrough:
+             * Walkthrough（演练）:
              * 1. If read count nonzero or write count nonzero
              *    and owner is a different thread, fail.
-             * 2. If count would saturate, fail. (This can only
+             * 2. If count would saturate（饱和）, fail. (This can only
              *    happen if count is already nonzero.)
-             * 3. Otherwise, this thread is eligible for lock if
+             * 3. Otherwise, this thread is eligible（符合条件） for lock if
              *    it is either a reentrant acquire or
              *    queue policy allows it. If so, update state
              *    and set owner.
              */
             Thread current = Thread.currentThread();
             int c = getState();
+            // 获取写锁的数量
             int w = exclusiveCount(c);
             if (c != 0) {
                 // (Note: if c != 0 and w == 0 then shared count != 0)
@@ -423,6 +425,7 @@ public class ReentrantReadWriteLock
             return true;
         }
 
+        // 读锁是共享锁
         protected final boolean tryReleaseShared(int unused) {
             Thread current = Thread.currentThread();
             if (firstReader == current) {
@@ -464,16 +467,16 @@ public class ReentrantReadWriteLock
              * Walkthrough:
              * 1. If write lock held by another thread, fail.
              * 2. Otherwise, this thread is eligible for
-             *    lock wrt state, so ask if it should block
+             *    lock wrt（关于） state, so ask if it should block
              *    because of queue policy. If not, try
              *    to grant by CASing state and updating count.
              *    Note that step does not check for reentrant
-             *    acquires, which is postponed to full version
+             *    acquires, which is postponed（推迟了） to full version
              *    to avoid having to check hold count in
-             *    the more typical non-reentrant case.
+             *    the more typical（典型的） non-reentrant case.
              * 3. If step 2 fails either because thread
-             *    apparently not eligible or CAS fails or count
-             *    saturated, chain to version with full retry loop.
+             *    apparently（显然） not eligible or CAS fails or count
+             *    saturated（饱和）, chain to version with full retry loop.
              */
             Thread current = Thread.currentThread();
             int c = getState();
@@ -508,7 +511,7 @@ public class ReentrantReadWriteLock
          */
         final int fullTryAcquireShared(Thread current) {
             /*
-             * This code is in part redundant with that in
+             * This code is in part redundant（冗余） with that in
              * tryAcquireShared but is simpler overall by not
              * complicating tryAcquireShared with interactions between
              * retries and lazily reading hold counts.
@@ -563,7 +566,7 @@ public class ReentrantReadWriteLock
 
         /**
          * Performs tryLock for write, enabling barging in both modes.
-         * This is identical in effect to tryAcquire except for lack
+         * This is identical（相同） in effect to tryAcquire except for lack
          * of calls to writerShouldBlock.
          */
         final boolean tryWriteLock() {
@@ -615,7 +618,7 @@ public class ReentrantReadWriteLock
                 }
             }
         }
-
+        // 当前线程是否拥有锁
         protected final boolean isHeldExclusively() {
             // While we must in general read state before owner,
             // we don't need to do so to check if current thread is owner
@@ -686,8 +689,8 @@ public class ReentrantReadWriteLock
             return false; // writers can always barge
         }
         final boolean readerShouldBlock() {
-            /* As a heuristic to avoid indefinite writer starvation,
-             * block if the thread that momentarily appears to be head
+            /* As a heuristic（推理） to avoid indefinite writer starvation,
+             * block if the thread that momentarily（暂时） appears to be head
              * of queue, if one exists, is a waiting writer.  This is
              * only a probabilistic effect since a new reader will not
              * block if there is a waiting writer behind other enabled
@@ -713,6 +716,7 @@ public class ReentrantReadWriteLock
     /**
      * The lock returned by method {@link ReentrantReadWriteLock#readLock}.
      */
+    // 共享模式
     public static class ReadLock implements Lock, java.io.Serializable {
         private static final long serialVersionUID = -5992448646407690164L;
         private final Sync sync;
@@ -735,7 +739,7 @@ public class ReentrantReadWriteLock
          *
          * <p>If the write lock is held by another thread then
          * the current thread becomes disabled for thread scheduling
-         * purposes and lies dormant until the read lock has been acquired.
+         * purposes（目的） and lies dormant（休眠） until the read lock has been acquired.
          */
         public void lock() {
             sync.acquireShared(1);
@@ -797,7 +801,7 @@ public class ReentrantReadWriteLock
          * <em>will</em> immediately acquire the read lock if it is
          * available, whether or not other threads are currently
          * waiting for the read lock.  This &quot;barging&quot; behavior
-         * can be useful in certain circumstances, even though it
+         * can be useful in certain（某些） circumstances（情况下）, even though it
          * breaks fairness. If you want to honor the fairness setting
          * for this lock, then use {@link #tryLock(long, TimeUnit)
          * tryLock(0, TimeUnit.SECONDS) } which is almost equivalent
@@ -922,6 +926,7 @@ public class ReentrantReadWriteLock
     /**
      * The lock returned by method {@link ReentrantReadWriteLock#writeLock}.
      */
+    // 排他锁
     public static class WriteLock implements Lock, java.io.Serializable {
         private static final long serialVersionUID = -4992448646407690164L;
         private final Sync sync;

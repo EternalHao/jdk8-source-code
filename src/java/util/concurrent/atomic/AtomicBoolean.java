@@ -55,6 +55,7 @@ public class AtomicBoolean implements java.io.Serializable {
 
     static {
         try {
+            //TODO 偏移量是干什么的
             valueOffset = unsafe.objectFieldOffset
                 (AtomicBoolean.class.getDeclaredField("value"));
         } catch (Exception ex) { throw new Error(ex); }

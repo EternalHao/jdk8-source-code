@@ -57,6 +57,7 @@ import sun.misc.Unsafe;
  * @since 1.6
  * @author Doug Lea
  */
+// state 是 Long 类型
 public abstract class AbstractQueuedLongSynchronizer
     extends AbstractOwnableSynchronizer
     implements java.io.Serializable {

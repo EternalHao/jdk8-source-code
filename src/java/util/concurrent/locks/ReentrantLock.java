@@ -38,8 +38,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.Collection;
 
 /**
- * A reentrant mutual exclusion {@link Lock} with the same basic
- * behavior and semantics as the implicit monitor lock accessed using
+ * A reentrant mutual（相互） exclusion {@link Lock} with the same basic
+ * behavior and semantics（语义） as the implicit monitor lock accessed using
  * {@code synchronized} methods and statements, but with extended
  * capabilities.
  *
